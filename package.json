@@ -1,0 +1,38 @@
+{
+  "name": "arquivo-bancario-vue",
+  "private": true,
+  "version": "0.0.0",
+  "author": "Pedro Paixão",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "save": "^2.9.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@mdi/font": "^7.4.47",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitest/coverage-v8": "^2.1.8",
+    "@vue/test-utils": "^2.4.6",
+    "eslint": "^9.16.0",
+    "eslint-plugin-vue": "^9.32.0",
+    "jsdom": "^25.0.1",
+    "prettier": "3.4.2",
+    "resize-observer-polyfill": "^1.5.1",
+    "sass": "^1.82.0",
+    "sass-loader": "^16.0.4",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.1",
+    "vite-plugin-vuetify": "^2.0.4",
+    "vitest": "^2.1.8",
+    "vue-tsc": "^2.1.10",
+    "vuetify": "^3.7.5"
+  }
+}
