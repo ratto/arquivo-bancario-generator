@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { VContainer, VAppBar, VAppBarNavIcon } from 'vuetify/components';
+import { useConfigStore } from '../utils/Store';
 
 const darkmode = ref(true);
+const store = useConfigStore();
 </script>
 
 <template>
   <VContainer>
     <VAppBar>
       <template v-slot:prepend>
-        <VAppBarNavIcon />
+        <VAppBarNavIcon @click="store.toggleDrawer" />
       </template>
 
       <VAppBarTitle>Application Bar</VAppBarTitle>
