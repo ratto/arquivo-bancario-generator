@@ -6,7 +6,7 @@ const store = useConfigStore();
 </script>
 
 <template>
-  <VNavigationDrawer :model-value="store.drawerOpen" @update:model-value="store.toggleDrawer">
+  <VNavigationDrawer :model-value="store.drawerOpen" @update:model-value="store.toggleDrawer" temporary>
     <VList nav>
       <VListItem to="/">Home</VListItem>
       <VListItem to="/form-arquivo">Arquivos</VListItem>

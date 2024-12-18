@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useTheme } from 'vuetify';
 import { VContainer, VAppBar, VAppBarNavIcon } from 'vuetify/components';
 import { useConfigStore } from '../utils/Store';
 
-const darkmode = ref(true);
+const darkTheme = ref(true);
+const theme = useTheme();
 const store = useConfigStore();
+
+function toggleTheme() {
+  theme.global.name.value = darkTheme.value ? 'light' : 'dark';
+  darkTheme.value = !darkTheme.value;
+}
 </script>
 
 <template>
@@ -18,10 +25,11 @@ const store = useConfigStore();
 
       <template v-slot:append>
         <VSwitch
-          v-model="darkmode"
+          :model-value="darkTheme"
           true-icon="mdi-weather-night"
           false-icon="mdi-white-balance-sunny"
           :hide-details="true"
+          @update:model-value="toggleTheme()"
         />
       </template>
     </VAppBar>
