@@ -1,6 +1,6 @@
 const isRequired = (value: string) => {
   const regex = /[0-9a-zA-Z]/;
-  if (regex.test(value)) return true;
+  if (!!value && regex.test(value)) return true;
 
   return 'Este campo é obrigatório';
 };

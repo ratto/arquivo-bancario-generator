@@ -24,6 +24,7 @@ function toggleTheme(e: boolean) {
 
     <template v-slot:append>
       <VSwitch
+        class="me-3"
         :model-value="darkmode"
         true-icon="mdi-weather-night"
         false-icon="mdi-white-balance-sunny"
