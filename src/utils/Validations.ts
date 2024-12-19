@@ -5,10 +5,11 @@ const isRequired = (value: string) => {
   return 'Este campo é obrigatório';
 };
 
-const maxLength = (value: string, maxLength: number) => {
-  if (value.length <= maxLength) return true;
-
-  return `Não pode ultrapassar ${maxLength} caracteres`;
+const maxLength = (max: number) => {
+  return (value: string) => {
+    if (!value) return true;
+    return value.length <= max || `Não pode ultrapassar ${max} caracteres`;
+  };
 };
 
 export { isRequired, maxLength };

@@ -23,24 +23,16 @@ describe('Validations suite', () => {
   });
 
   describe('maxLength tests', () => {
-    it('should return true if value is lesser then maxLength', () => {
-      const sut = maxLength('123abc', 8);
+    const max = 4;
+    const sut = maxLength(max);
 
-      expect(sut).toBe(true);
+    it.each(['abc', '1234', ''])('should be true within length limit', (value) => {
+      expect(sut(value)).toBe(true);
     });
 
-    it('should return true if value equals maxLenght', () => {
-      const sut = maxLength('123abc', 6);
-
-      expect(sut).toBe(true);
-    });
-
-    it('should give a message with maxLength whenever value passes maxLength value', () => {
-      const length = 5;
-      const sut = maxLength('123abc', length);
-
-      expect(typeof sut).toBe('string');
-      expect(sut).toBe(`Não pode ultrapassar ${length} caracteres`);
+    it.each(['abcdefg', '123456'])('should return an error message whenever the max limit is crossed', (value) => {
+      expect(typeof sut(value)).toBe('string');
+      expect(sut(value)).toBe(`Não pode ultrapassar ${max} caracteres`);
     });
   });
 });
