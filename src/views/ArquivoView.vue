@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VTextField, VForm } from 'vuetify/components';
-import { ValidateField } from '../utils/Validations';
+import { isRequired } from '../utils/Validations';
 import { useTemplateRef } from 'vue';
 
 const testForm = useTemplateRef('test-form');
@@ -16,7 +16,7 @@ async function submit() {
   <div id="arquivo-view">
     <h1>Main</h1>
     <VForm novalidate ref="test-form" @submit.prevent="submit">
-      <VTextField name="test" label="Test" :rules="[ValidateField]" />
+      <VTextField name="test" label="Test" :rules="[isRequired]" />
 
       <VBtn type="submit" color="primary">Criar arquivo</VBtn>
     </VForm>

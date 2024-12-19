@@ -1,7 +1,14 @@
-const ValidateField = (value: any) => {
-  if (!value) return 'Este campo é obrigatório';
+const isRequired = (value: string) => {
+  const regex = /[0-9a-zA-Z]/;
+  if (regex.test(value)) return true;
 
-  return true;
+  return 'Este campo é obrigatório';
 };
 
-export { ValidateField };
+const maxLength = (value: string, maxLength: number) => {
+  if (value.length <= maxLength) return true;
+
+  return `Não pode ultrapassar ${maxLength} caracteres`;
+};
+
+export { isRequired, maxLength };
