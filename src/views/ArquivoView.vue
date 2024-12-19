@@ -27,9 +27,9 @@ function cancelRegistroDetalhe() {
   registroDetalhe.value = { bancoCreditado: {} } as RegistroDetalhe;
 }
 
-function deleteRegistroDetalhe() {
+/* function deleteRegistroDetalhe() {
   // To be implemented
-}
+} */
 
 function resetArquivo() {
   arquivo.value.registrosDetalhe = [] as RegistroDetalhe[];
@@ -44,9 +44,9 @@ async function addRegistroDetalhe() {
   }
 }
 
-async function editRegistroDetalhe() {
+/* async function editRegistroDetalhe() {
   // To be implemented
-}
+} */
 
 async function submit() {
   const formIsValid = await formArquivo.value?.validate();
