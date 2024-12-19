@@ -2,10 +2,11 @@
 
 <template>
   <div id="home-view">
-    <h1>Home</h1>
+    <h1 class="d-sr-only">Página Inicial</h1>
     <p>
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam debitis, corporis hic ex, ratione inventore nisi
-      voluptas voluptatem quos error ipsum alias, fugiat repellendus porro sed. Cupiditate soluta repudiandae tempore!
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam consequuntur assumenda harum autem sint maiores
+      exercitationem? Eveniet voluptatibus odio, minima assumenda quo ducimus possimus, nobis dolores maiores corrupti,
+      ipsum doloribus!
     </p>
   </div>
 </template>
