@@ -63,15 +63,10 @@ function generateHead(): string {
 function generateRegistros(): void {
   arquivo.value.registrosDetalhe.map((registro, i) => {
     if (typeof registro != null) {
-      const dataPagamento = new Date(registro.dataPagamento)
-        .toLocaleDateString('pt-br', { dateStyle: 'short' })
-        .toString()
-        .replaceAll('/', '');
-      const dataCredito = new Date(registro.dataCredito)
-        .toLocaleDateString('pt-br', { dateStyle: 'short' })
-        .toString()
-        .replaceAll('/', '');
-      const registroToText = `G${registro.bancoCreditado.prefixoAgencia}${registro.bancoCreditado.dvAgencia}${registro.bancoCreditado.numConta}${registro.bancoCreditado.numConta}     ${dataPagamento}${dataCredito}${registro.codigoBarras}${registro.valorRecebido}${registro.valorTarifa}${i + 1}    ${registro.meioArrecadacao}${registro.autenticacaoEletronica}${registro.formaRecebimento}         `;
+      const dataPagamento = normalizarData(registro.dataPagamento).replaceAll('/', '');
+      const dataCredito = normalizarData(registro.dataCredito).replaceAll('/', '');
+
+      const registroToText = `G${registro.bancoCreditado.prefixoAgencia}${registro.bancoCreditado.dvAgencia}${registro.bancoCreditado.numConta}${registro.bancoCreditado.numConta}     ${dataPagamento}${dataCredito}${registro.codigoBarras}${registro.valorRecebido}${registro.valorTarifa}${i + 1}    ${registro.meioArrecadacao}${registro.autenticacaoEletronica ? registro.autenticacaoEletronica : `                       `}${registro.formaRecebimento}         `;
       arquivoTexto.value.push(registroToText);
     }
   });
@@ -83,6 +78,10 @@ function generateTrailler(): string {
   }, 0);
 
   return `Z${arquivoTexto.value.length + 1}${valorTotal}`;
+}
+
+function normalizarData(date: string): string {
+  return new Date(date).toLocaleDateString('pt-br', { dateStyle: 'short' });
 }
 
 async function saveRegistroDetalhe(index: number | null) {
@@ -354,8 +353,8 @@ async function submit() {
             <tr v-for="(registro, index) in arquivo.registrosDetalhe" :key="index">
               <td>{{ `${registro.bancoCreditado.prefixoAgencia}-${registro.bancoCreditado.dvAgencia}` }}</td>
               <td>{{ `${registro.bancoCreditado.numConta}-${registro.bancoCreditado.dvConta}` }}</td>
-              <td>{{ registro.dataPagamento }}</td>
-              <td>{{ registro.dataCredito }}</td>
+              <td>{{ normalizarData(registro.dataPagamento) }}</td>
+              <td>{{ normalizarData(registro.dataCredito) }}</td>
               <td>{{ registro.valorRecebido }}</td>
               <td>{{ registro.valorTarifa }}</td>
               <td>{{ registro.prefAgenciaRecebedora }}</td>
@@ -392,13 +391,11 @@ async function submit() {
     </VForm>
     <VDialog v-model="openDialog" width="auto">
       <VCard>
-        <VCardText v-if="arquivoTexto.length > 0">
-          <code>
+        <VCardText>
+          <code v-if="arquivoTexto.length > 0">
             <div v-for="(line, i) in arquivoTexto" :key="i">{{ line }}</div>
           </code>
-        </VCardText>
-        <VCardText v-else>
-          <VAlert color="red" class="tet-center" text="Erro ao gerar o texto do arquivo-retorno!" />
+          <VAlert v-else color="red" class="text-center" text="Erro ao gerar o texto do arquivo-retorno!" />
         </VCardText>
         <VCardActions>
           <VBtn color="primary" @click="openDialog = false">Ok</VBtn>
