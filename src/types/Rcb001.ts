@@ -2,7 +2,6 @@ import Banco from './Banco';
 
 // Registro Detalhe de Arquivo-Retorno
 export type RegistroDetalhe = {
-  seqRegistro: number;
   codRegistro: number;
   bancoCreditado: Banco;
   dataPagamento: string;

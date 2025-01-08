@@ -7,6 +7,8 @@ import {
   VRow,
   VCol,
   VSelect,
+  VCard,
+  VCardActions,
   VExpansionPanels,
   VExpansionPanel,
   VExpansionPanelText,
@@ -18,40 +20,91 @@ import { FormaRecebimento, MeioArrecadacao } from '../enums/Rcb001Enums';
 
 const formArquivo = useTemplateRef('form-arquivo');
 const arquivo = ref<Rcb001>({ registrosDetalhe: [] as RegistroDetalhe[] } as Rcb001);
+const openDialog = ref(false);
 const registroDetalhe = ref<RegistroDetalhe>({ bancoCreditado: {} } as RegistroDetalhe);
+const registroAtual = ref<number | null>(null);
+const arquivoTexto = ref<String[]>([]);
 
 const meiosArrecadacao = [MeioArrecadacao.CAIXA, MeioArrecadacao.ELETRONICA, MeioArrecadacao.INTERNET];
-const formasRecebimento = [FormaRecebimento.CHEQUE, FormaRecebimento.DINHEIRO, FormaRecebimento.NAO_IDENTIFICADA];
+const formasRecebimento = [FormaRecebimento.DINHEIRO, FormaRecebimento.CHEQUE, FormaRecebimento.NAO_IDENTIFICADA];
 
-function cancelRegistroDetalhe() {
+function cancelRegistroDetalhe(): void {
   registroDetalhe.value = { bancoCreditado: {} } as RegistroDetalhe;
 }
 
-/* function deleteRegistroDetalhe() {
-  // To be implemented
-} */
+function deleteRegistroDetalhe(index: number): void {
+  arquivo.value.registrosDetalhe.splice(index, 1);
+}
 
-function resetArquivo() {
+function resetArquivo(): void {
   arquivo.value.registrosDetalhe = [] as RegistroDetalhe[];
 }
 
-async function addRegistroDetalhe() {
+function editRegistroDetalhe(index: number): void {
+  registroAtual.value = index;
+  registroDetalhe.value = Object.create(arquivo.value.registrosDetalhe[index]);
+}
+
+function generateArquivo(): void {
+  arquivoTexto.value = new Array<String>();
+  arquivoTexto.value[0] = generateHead();
+  generateRegistros();
+  arquivoTexto.value.push(generateTrailler());
+}
+
+function generateHead(): string {
+  const dataGeracaoArquivo = new Date(arquivo.value.dataGeracaoArquivo)
+    .toLocaleDateString('pt-br', { dateStyle: 'short' })
+    .toString()
+    .replaceAll('/', '');
+  return `A2${arquivo.value.numConvenio} ${arquivo.value.seqRetornoIntercambio}     ${arquivo.value.nomeEmpresa}${arquivo.value.codBanco}${arquivo.value.nomeBanco}${dataGeracaoArquivo}                                                               ${!arquivo.value.codComercioEletronico ? `        ` : arquivo.value.codComercioEletronico}`;
+}
+
+function generateRegistros(): void {
+  arquivo.value.registrosDetalhe.map((registro, i) => {
+    if (typeof registro != null) {
+      const dataPagamento = new Date(registro.dataPagamento)
+        .toLocaleDateString('pt-br', { dateStyle: 'short' })
+        .toString()
+        .replaceAll('/', '');
+      const dataCredito = new Date(registro.dataCredito)
+        .toLocaleDateString('pt-br', { dateStyle: 'short' })
+        .toString()
+        .replaceAll('/', '');
+      const registroToText = `G${registro.bancoCreditado.prefixoAgencia}${registro.bancoCreditado.dvAgencia}${registro.bancoCreditado.numConta}${registro.bancoCreditado.numConta}     ${dataPagamento}${dataCredito}${registro.codigoBarras}${registro.valorRecebido}${registro.valorTarifa}${i + 1}    ${registro.meioArrecadacao}${registro.autenticacaoEletronica}${registro.formaRecebimento}         `;
+      arquivoTexto.value.push(registroToText);
+    }
+  });
+}
+
+function generateTrailler(): string {
+  const valorTotal = arquivo.value.registrosDetalhe.reduce((totalValue, { valorRecebido, valorTarifa }) => {
+    return (totalValue += valorRecebido + valorTarifa);
+  }, 0);
+
+  return `Z${arquivoTexto.value.length + 1}${valorTotal}`;
+}
+
+async function saveRegistroDetalhe(index: number | null) {
   const formIsValid = await formArquivo.value?.validate();
 
   if (formIsValid?.valid) {
-    arquivo.value.registrosDetalhe.push(registroDetalhe.value);
+    if (index == null) arquivo.value.registrosDetalhe.push(registroDetalhe.value);
+    else arquivo.value.registrosDetalhe.splice(index, 1, registroDetalhe.value);
+
+    registroAtual.value = null;
+
     registroDetalhe.value = { bancoCreditado: {} } as RegistroDetalhe;
   }
 }
 
-/* async function editRegistroDetalhe() {
-  // To be implemented
-} */
-
 async function submit() {
   const formIsValid = await formArquivo.value?.validate();
 
-  if (formIsValid?.valid) console.log('submitted');
+  if (formIsValid?.valid) {
+    generateArquivo();
+    openDialog.value = true;
+  }
 }
 </script>
 
@@ -114,6 +167,15 @@ async function submit() {
             :rules="[isRequired, maxLength(20)]"
           />
         </VCol>
+        <VCol>
+          <VTextField
+            type="number"
+            color="primary"
+            v-model="arquivo.numConvenio"
+            label="Número do Convênio"
+            :rules="[isRequired, maxLength(6)]"
+          />
+        </VCol>
       </VRow>
       <VRow>
         <VCol>
@@ -130,11 +192,6 @@ async function submit() {
         <VExpansionPanel title="Rergistro Detalhe">
           <VExpansionPanelText>
             <VRow>
-              <VCol>
-                <VTextField v-model="registroDetalhe.seqRegistro" disabled>{{
-                  !!arquivo.registrosDetalhe ? arquivo.registrosDetalhe.length + 1 : '1'
-                }}</VTextField>
-              </VCol>
               <VCol>
                 <VTextField
                   type="number"
@@ -243,9 +300,35 @@ async function submit() {
                 />
               </VCol>
             </VRow>
+            <VRow>
+              <VCol>
+                <VTextField
+                  color="primary"
+                  type="number"
+                  v-model="registroDetalhe.codigoBarras"
+                  label="Código de Barras"
+                  :rules="[maxLength(44), isRequired]"
+                />
+              </VCol>
+            </VRow>
             <div class="form-footer d-flex justify-end mt-3">
               <VBtn type="button" @click="cancelRegistroDetalhe" color="secondary" class="mx-1">Cancelar</VBtn>
-              <VBtn type="button" @click="addRegistroDetalhe" color="primary" class="mx-1">Adicionar Registro</VBtn>
+              <VBtn
+                v-show="registroAtual == null"
+                type="button"
+                @click="saveRegistroDetalhe(null)"
+                color="primary"
+                class="mx-1"
+                >Salvar Registro</VBtn
+              >
+              <VBtn
+                v-show="typeof registroAtual == 'number'"
+                type="button"
+                @click="saveRegistroDetalhe(registroAtual!)"
+                color="primary"
+                class="mx-1"
+                >Salvar Registro</VBtn
+              >
             </div>
           </VExpansionPanelText>
         </VExpansionPanel>
@@ -255,7 +338,6 @@ async function submit() {
         <VTable v-if="!!arquivo.registrosDetalhe && arquivo.registrosDetalhe.length > 0">
           <thead>
             <tr>
-              <th>Registro</th>
               <th>Agência Creditada</th>
               <th>Conta Corrente</th>
               <th>Data do Pagamento</th>
@@ -265,11 +347,11 @@ async function submit() {
               <th>Agência Recebedora</th>
               <th>Meio de Arrecadação</th>
               <th>Forma de Recebimento</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(registro, index) in arquivo.registrosDetalhe" :key="index">
-              <td>{{ registro.seqRegistro }}</td>
               <td>{{ `${registro.bancoCreditado.prefixoAgencia}-${registro.bancoCreditado.dvAgencia}` }}</td>
               <td>{{ `${registro.bancoCreditado.numConta}-${registro.bancoCreditado.dvConta}` }}</td>
               <td>{{ registro.dataPagamento }}</td>
@@ -279,6 +361,24 @@ async function submit() {
               <td>{{ registro.prefAgenciaRecebedora }}</td>
               <td>{{ registro.meioArrecadacao }}</td>
               <td>{{ registro.formaRecebimento }}</td>
+              <td>
+                <div class="d-flex">
+                  <VBtn
+                    class="mx-1"
+                    color="warning"
+                    size="x-small"
+                    icon="mdi mdi-file-edit"
+                    @click="editRegistroDetalhe(index)"
+                  />
+                  <VBtn
+                    class="mx-1"
+                    color="red"
+                    size="x-small"
+                    icon="mdi mdi-delete"
+                    @click="deleteRegistroDetalhe(index)"
+                  />
+                </div>
+              </td>
             </tr>
           </tbody>
         </VTable>
@@ -290,6 +390,21 @@ async function submit() {
         <VBtn type="submit" color="primary" class="mx-1">Criar arquivo</VBtn>
       </div>
     </VForm>
+    <VDialog v-model="openDialog" width="auto">
+      <VCard>
+        <VCardText v-if="arquivoTexto.length > 0">
+          <code>
+            <div v-for="(line, i) in arquivoTexto" :key="i">{{ line }}</div>
+          </code>
+        </VCardText>
+        <VCardText v-else>
+          <VAlert color="red" class="tet-center" text="Erro ao gerar o texto do arquivo-retorno!" />
+        </VCardText>
+        <VCardActions>
+          <VBtn color="primary" @click="openDialog = false">Ok</VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </div>
 </template>
 

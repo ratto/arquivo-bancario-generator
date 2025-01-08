@@ -1,5 +1,8 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n';
+import { createI18n, useI18n } from 'vue-i18n';
+import { pt } from 'vuetify/locale';
 import { createVuetify } from 'vuetify';
 import '@mdi/font/scss/materialdesignicons.scss';
 import * as components from 'vuetify/components';
@@ -8,9 +11,6 @@ import 'vuetify/_styles.scss';
 import { router } from './router';
 import App from './App.vue';
 import './style.scss';
-import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n';
-import { createI18n, useI18n } from 'vue-i18n';
-import { pt } from 'vuetify/locale';
 
 const pinia = createPinia();
 
