@@ -25,8 +25,16 @@ const registroDetalhe = ref<RegistroDetalhe>({ bancoCreditado: {} } as RegistroD
 const registroAtual = ref<number | null>(null);
 const arquivoTexto = ref<String[]>([]);
 
-const meiosArrecadacao = [MeioArrecadacao.CAIXA, MeioArrecadacao.ELETRONICA, MeioArrecadacao.INTERNET];
-const formasRecebimento = [FormaRecebimento.DINHEIRO, FormaRecebimento.CHEQUE, FormaRecebimento.NAO_IDENTIFICADA];
+const meiosArrecadacao = [
+  { type: MeioArrecadacao.CAIXA, label: 'Caixa' },
+  { type: MeioArrecadacao.ELETRONICA, label: 'Eletrônica' },
+  { type: MeioArrecadacao.INTERNET, label: 'Internet' },
+];
+const formasRecebimento = [
+  { type: FormaRecebimento.DINHEIRO, label: 'Dinheiro' },
+  { type: FormaRecebimento.CHEQUE, label: 'Cheque' },
+  { type: FormaRecebimento.NAO_IDENTIFICADA, label: 'Não identificada' },
+];
 
 function cancelRegistroDetalhe(): void {
   registroDetalhe.value = { bancoCreditado: {} } as RegistroDetalhe;
@@ -289,6 +297,8 @@ async function submit() {
                   label="Meio de Arrecadação"
                   :items="meiosArrecadacao"
                   v-model:model-value="registroDetalhe.meioArrecadacao"
+                  item-title="label"
+                  item-value="type"
                 />
               </VCol>
               <VCol>
@@ -296,6 +306,8 @@ async function submit() {
                   label="Forma de Recebimento"
                   :items="formasRecebimento"
                   v-model:model-value="registroDetalhe.formaRecebimento"
+                  item-title="label"
+                  item-value="type"
                 />
               </VCol>
             </VRow>
