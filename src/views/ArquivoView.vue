@@ -61,10 +61,8 @@ function generateArquivo(): void {
 }
 
 function generateHead(): string {
-  const dataGeracaoArquivo = new Date(arquivo.value.dataGeracaoArquivo)
-    .toLocaleDateString('pt-br', { dateStyle: 'short' })
-    .toString()
-    .replaceAll('/', '');
+  const dataGeracaoArquivo = normalizarData(arquivo.value.dataGeracaoArquivo).replaceAll('/', '');
+
   return `A2${arquivo.value.numConvenio} ${arquivo.value.seqRetornoIntercambio}     ${arquivo.value.nomeEmpresa}${arquivo.value.codBanco}${arquivo.value.nomeBanco}${dataGeracaoArquivo}                                                               ${!arquivo.value.codComercioEletronico ? `        ` : arquivo.value.codComercioEletronico}`;
 }
 
