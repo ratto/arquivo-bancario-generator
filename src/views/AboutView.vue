@@ -1,4 +1,20 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { loadScript } from '@paypal/paypal-js';
+import { onBeforeMount } from 'vue';
+
+onBeforeMount(() => {
+  const clientId = import.meta.env.VITE_CLIENT_ID;
+
+  loadScript({ clientId }).then((paypal: any) => {
+    paypal
+      ?.Buttons()
+      .render('#donate-button-container')
+      .catch((error: Error) => {
+        console.error('falha ao renderizar os botões Paypal!', error);
+      });
+  });
+});
+</script>
 
 <template>
   <div id="about-view">
@@ -8,5 +24,7 @@
       alias veniam, quo similique cumque atque iure, veritatis deserunt magnam repellendus, beatae repudiandae vel.
       Consectetur!
     </p>
+
+    <div id="donate-button-container"></div>
   </div>
 </template>
