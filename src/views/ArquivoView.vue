@@ -72,7 +72,7 @@ function generateRegistros(): void {
       const dataPagamento = normalizarData(registro.dataPagamento).replaceAll('/', '');
       const dataCredito = normalizarData(registro.dataCredito).replaceAll('/', '');
 
-      const registroToText = `G${registro.bancoCreditado.prefixoAgencia}${registro.bancoCreditado.dvAgencia}${registro.bancoCreditado.numConta}${registro.bancoCreditado.numConta}     ${dataPagamento}${dataCredito}${registro.codigoBarras}${registro.valorRecebido}${registro.valorTarifa}${i + 1}    ${registro.meioArrecadacao}${registro.autenticacaoEletronica ? registro.autenticacaoEletronica : `                       `}${registro.formaRecebimento}         `;
+      const registroToText = `G${registro.bancoCreditado.prefixoAgencia}${registro.bancoCreditado.dvAgencia}${registro.bancoCreditado.numConta}${registro.bancoCreditado.dvConta}     ${dataPagamento}${dataCredito}${registro.codigoBarras}${registro.valorRecebido}${registro.valorTarifa}${i + 1}    ${registro.meioArrecadacao}${registro.autenticacaoEletronica ? registro.autenticacaoEletronica : `                       `}${registro.formaRecebimento}         `;
       arquivoTexto.value.push(registroToText);
     }
   });
@@ -90,7 +90,7 @@ function normalizarData(date: string): string {
   return new Date(date).toLocaleDateString('pt-br', { dateStyle: 'short' });
 }
 
-async function saveRegistroDetalhe(index: number | null) {
+async function saveRegistroDetalhe(index: number | null): Promise<void> {
   const formIsValid = await formArquivo.value?.validate();
 
   if (formIsValid?.valid) {
@@ -103,7 +103,7 @@ async function saveRegistroDetalhe(index: number | null) {
   }
 }
 
-async function submit() {
+async function submit(): Promise<void> {
   const formIsValid = await formArquivo.value?.validate();
 
   if (formIsValid?.valid) {
