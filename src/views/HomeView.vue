@@ -1,38 +1,52 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const leiautesArquivoUrl = 'https://www.bb.com.br/site/pro-seu-negocio/aplicativos-leiautes-de-arquivos/';
+const repositorioUrl = import.meta.env.VITE_REPOSITORIO_URL;
+const facebookUrl = import.meta.env.VITE_FACEBOOK_URL;
+const linkedInUrl = import.meta.env.VITE_LINKEDIN_URL;
+</script>
 
 <template>
   <div id="home-view">
-    <h1 class="d-sr-only">Página Inicial</h1>
+    <h1 class="d-sr-only">Home</h1>
+    <h2>Porquê criei esta ferramenta?</h2>
     <p>
-      Em meu último emprego precisávamos criar arquivos bancários nos leiautes CNAB240 ou RCB001 para realizar testes,
-      tanto no desenvolvimento, quanto na fase de QA, o processamento desse tipo de arquivo no sistema. Quem desenvolve
-      sistemas para prefeituras e outros órgãos públicos, fintechs ou qualquer outro que precise processar pagamentos
-      realizados sabe a dificuldade que é gerar um arquivo desses na mão (sim, fazíamos na mão mesmo!).
+      Acredito que a tecnologia tem o poder de transformar o dia a dia, tornando tarefas complexas mais simples, rápidas
+      e acessíveis. No universo da automação bancária, enfrentamos um desafio comum: a criação manual de
+      arquivos-retorno. Esse processo não é apenas lento e tedioso, mas também propenso a erros humanos, consumindo
+      tempo precioso que poderia ser dedicado a tarefas mais importantes.
     </p>
     <p>
-      Uma vez levei mais de duas horas para criar um arquivo desses e realizar o teste, que demorou pouco menos de 5
-      minutos para terminar. Mais de duas horas para assegurar o funcionamento correto de um processamento de apenas um
-      arquivo. Isso me deixou bastante frustrado, porém, foi a motivação necessária para desenvolver um simples gerador
-      de arquivos bancários.
+      Essa frustração me motivou a criar algo melhor. Algo que ajudasse não só na minha rotina, mas também na de outros
+      profissionais que lidam com processamento de pagamentos e integração bancária.
+    </p>
+    <h2>O que foi feito (com muito café)?</h2>
+    <p>
+      Desenvolvi uma aplicação moderna e intuitiva que automatiza a geração de arquivos-retorno bancários. Com base em
+      entradas específicas, esta ferramenta cria arquivos no leiaute RCB001, utilizado em pagamentos realizados nas
+      modalidades de débito em conta através da internet e BB Crediário Internet (pode conferir no
+      <a :href="leiautesArquivoUrl" target="_blank">website do Banco do Brasil</a>).
     </p>
     <p>
-      E assim fiz: desenvolvi uma aplicação em Vue.js que, após alguns <i>inputs</i>, gerava um arquivo-retorno para
-      alimentar o sistema e poder verificar o funcionamento do processamento de pagamentos.
+      Esta solução foi projetada para garantir precisão e agilidade, eliminando a necessidade de gerar esses arquivos
+      manualmente. Utilizei as mais recentes tecnologias, como Vue.js, Vite e Vuetify, para criar uma experiência fluida
+      e eficiente. Além disso, já implementei o darkmode (viu, Erick?!).
+    </p>
+    <h2>O que ofereço?</h2>
+    <p>
+      Este Gerador de Arquivos-Retorno é uma ferramenta poderosa que transforma um trabalho que antes poderia levar uma
+      hora ou mais em uma tarefa concluída em minutos. Além de poupar tempo, esta solução reduz erros e simplifica o
+      desenvolvimento e os testes de processamento de pagamentos, contribuindo para um fluxo de trabalho mais produtivo
+      e confiável.
     </p>
     <p>
-      Mas não gosto de guardar essas inovações para mim: assim como gerei arquivos para facilitar o trabalho de meus
-      colegas, dividi o meu código com aqueles que me pediam. O problema é que alguns deles não tinha expertise com o
-      node, e a dificuldade de criar um build de dev no Node para utilizar o aplicativo superava a dificuldade de criar
-      um arquivo desses na mão. Deixei todo o meu código "javascriptzinho" com os meus colegas depois de sair da
-      empresa.
+      Este projeto nasceu da experiência prática e do desejo de compartilhar soluções que realmente fazem a diferença.
+      Hoje, nossa ferramenta está disponível para você, pronta para ajudá-lo a otimizar processos, economizar tempo e
+      focar no que realmente importa.
     </p>
     <p>
-      Então decidi criar esta versão com tecnologias mais recentes, para ajudar não só os meus antigos colegas - e agora
-      amigos - como toda a comunidade de desenvolvedores e QAs que precisam gerar arquivos em diferentes leiautes para
-      testar em seus próprios sistemas. E, mantendo a mesma filosofia, também disponibilizo todo o código em meu
-      <a href="https://github.com/ratto/arquivo-bancario-generator" target="_blank">github</a>. Fique a vontade para
-      utilizá-lo!
+      Se quiser, você também poderá conferir o código deste projeto na página
+      <a :href="repositorioUrl" target="_blank">do repositório em meu Github</a>. Estou aberto à feedbacks em meu
+      <a :href="linkedInUrl" target="_blank">LinkedIn</a> ou <a :href="facebookUrl" target="_blank">Facebook</a>.
     </p>
-    <p>Espero que esta aplicação lhe ajude tanto o quanto me ajudou!</p>
   </div>
 </template>

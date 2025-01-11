@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const donateUrl = 'https://www.paypal.com/donate/?hosted_button_id=8RE442ASFC2PS';
-const repositorioUrl = 'https://github.com/ratto/arquivo-bancario-generator';
+const donateUrl = import.meta.env.VITE_DONATE_URL;
+const repositorioUrl = import.meta.env.VITE_REPOSITORIO_URL;
 </script>
 
 <template>
