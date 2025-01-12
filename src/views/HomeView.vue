@@ -8,7 +8,7 @@ const linkedInUrl = import.meta.env.VITE_LINKEDIN_URL;
 <template>
   <div id="home-view">
     <h1 class="d-sr-only">Home</h1>
-    <h2>Porquê criei esta ferramenta?</h2>
+    <h2>Por que criei esta ferramenta?</h2>
     <p>
       Acredito que a tecnologia tem o poder de transformar o dia a dia, tornando tarefas complexas mais simples, rápidas
       e acessíveis. No universo da automação bancária, enfrentamos um desafio comum: a criação manual de
@@ -40,7 +40,7 @@ const linkedInUrl = import.meta.env.VITE_LINKEDIN_URL;
     </p>
     <p>
       Este projeto nasceu da experiência prática e do desejo de compartilhar soluções que realmente fazem a diferença.
-      Hoje, nossa ferramenta está disponível para você, pronta para ajudá-lo a otimizar processos, economizar tempo e
+      Hoje, esta ferramenta está disponível para você, pronta para ajudá-lo a otimizar processos, economizar tempo e
       focar no que realmente importa.
     </p>
     <p>
