@@ -25,7 +25,7 @@ export type Rcb001 = {
   dataGeracaoArquivo: string;
   seqArquivo: number;
   versaoLeiaute: number;
-  codComercioEletronico?: string;
+  codComercioNaoEletronico?: string;
 
   registrosDetalhe: Array<RegistroDetalhe>;
 };

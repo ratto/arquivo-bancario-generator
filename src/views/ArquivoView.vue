@@ -61,29 +61,52 @@ function generateArquivo(): void {
 }
 
 function generateHead(): string {
-  const dataGeracaoArquivo = normalizarData(arquivo.value.dataGeracaoArquivo).replaceAll('/', '');
+  const numConvenio: string = arquivo.value.numConvenio.toString().padStart(6, '0');
+  const seqRetornoIntercambio: string = arquivo.value.seqRetornoIntercambio.toString().padStart(9, '0');
+  const nomeEmpresa: string = arquivo.value.nomeEmpresa.toUpperCase().padEnd(20);
+  const codBanco: string = arquivo.value.codBanco.toString().padStart(3, '0');
+  const nomeBanco: string = arquivo.value.nomeBanco.toUpperCase().padEnd(20);
+  const dataGeracaoArquivo: string = normalizarData(arquivo.value.dataGeracaoArquivo).replaceAll('/', '');
+  const seqArquivo: string = arquivo.value.seqArquivo.toString().padStart(6, '0');
+  const codComercioNaoEletronico: string = !!arquivo.value.codComercioNaoEletronico
+    ? arquivo.value.codComercioNaoEletronico.padStart(8, '0')
+    : `        `;
 
-  return `A2${arquivo.value.numConvenio} ${arquivo.value.seqRetornoIntercambio}     ${arquivo.value.nomeEmpresa}${arquivo.value.codBanco}${arquivo.value.nomeBanco}${dataGeracaoArquivo}                                                               ${!arquivo.value.codComercioEletronico ? `        ` : arquivo.value.codComercioEletronico}`;
+  return `A2${numConvenio} ${seqRetornoIntercambio}    ${nomeEmpresa}${codBanco}${nomeBanco}${dataGeracaoArquivo}${seqArquivo}06                                                             ${codComercioNaoEletronico}`;
 }
 
 function generateRegistros(): void {
   arquivo.value.registrosDetalhe.map((registro, i) => {
     if (typeof registro != null) {
-      const dataPagamento = normalizarData(registro.dataPagamento).replaceAll('/', '');
-      const dataCredito = normalizarData(registro.dataCredito).replaceAll('/', '');
+      const prefixoAgencia: string = registro.bancoCreditado.prefixoAgencia.toString().padStart(4, '0');
+      const dvAgencia: string = registro.bancoCreditado.dvAgencia.toString();
+      const numConta: string = registro.bancoCreditado.numConta.toString().padStart(9, '0');
+      const dvConta: string = registro.bancoCreditado.dvConta.toString();
+      const dataPagamento: string = normalizarData(registro.dataPagamento).replaceAll('/', '');
+      const dataCredito: string = normalizarData(registro.dataCredito).replaceAll('/', '');
+      const codigoBarras: string = registro.codigoBarras.toString().padStart(44, '0');
+      const valorRecebido: string = registro.valorRecebido.toString().padStart(12, '0');
+      const valorTarifa: string = registro.valorTarifa.toString().padStart(7, '0');
+      const numSeqRegistro: string = (i + 1).toString().padStart(8, '0');
+      const prefAgenciaRecebedora: string = registro.prefAgenciaRecebedora.toString().padStart(4, '0');
+      const meioArrecadacao: string = registro.meioArrecadacao.toString();
+      const formaRecebimento: string = registro.formaRecebimento.toString();
+      const autenticacaoEletronica: string = !!registro.autenticacaoEletronica
+        ? registro.autenticacaoEletronica.padStart(23, '0')
+        : `                       `;
 
-      const registroToText = `G${registro.bancoCreditado.prefixoAgencia}${registro.bancoCreditado.dvAgencia}${registro.bancoCreditado.numConta}${registro.bancoCreditado.dvConta}     ${dataPagamento}${dataCredito}${registro.codigoBarras}${registro.valorRecebido}${registro.valorTarifa}${i + 1}    ${registro.meioArrecadacao}${registro.autenticacaoEletronica ? registro.autenticacaoEletronica : `                       `}${registro.formaRecebimento}         `;
+      const registroToText = `G${prefixoAgencia}${dvAgencia}${numConta}${dvConta}     ${dataPagamento}${dataCredito}${codigoBarras}${valorRecebido}${valorTarifa}${numSeqRegistro}${prefAgenciaRecebedora}    ${meioArrecadacao}${autenticacaoEletronica}${formaRecebimento}         `;
       arquivoTexto.value.push(registroToText);
     }
   });
 }
 
 function generateTrailler(): string {
-  const valorTotal = arquivo.value.registrosDetalhe.reduce((totalValue, { valorRecebido, valorTarifa }) => {
+  const valorTotal: number = arquivo.value.registrosDetalhe.reduce((totalValue, { valorRecebido, valorTarifa }) => {
     return (totalValue += valorRecebido + valorTarifa);
   }, 0);
 
-  return `Z${arquivoTexto.value.length + 1}${valorTotal}`;
+  return `Z${(arquivoTexto.value.length + 1).toString().padStart(6, '0')}${valorTotal.toString().padStart(17, '0')}                                                                                                                              `;
 }
 
 function normalizarData(date: string): string {
@@ -186,7 +209,7 @@ async function submit(): Promise<void> {
         <VCol>
           <VTextField
             color="primary"
-            v-model="arquivo.codComercioEletronico"
+            v-model="arquivo.codComercioNaoEletronico"
             label="Código de Comércio Eletrônico"
             :rules="[maxLength(8)]"
           />
@@ -403,7 +426,7 @@ async function submit(): Promise<void> {
       <VCard>
         <VCardText>
           <code v-if="arquivoTexto.length > 0">
-            <div v-for="(line, i) in arquivoTexto" :key="i">{{ line }}</div>
+            <div v-for="(line, i) in arquivoTexto" :key="i">{{ line.replaceAll(' ', '&nbsp;') }}</div>
           </code>
           <VAlert v-else color="red" class="text-center" text="Erro ao gerar o texto do arquivo-retorno!" />
         </VCardText>
