@@ -12,6 +12,7 @@ import {
   VExpansionPanels,
   VExpansionPanel,
   VExpansionPanelText,
+  VBtn,
 } from 'vuetify/components';
 import { VDateInput } from 'vuetify/labs/VDateInput';
 import { isRequired, maxLength } from '../utils/Validations';
@@ -35,6 +36,27 @@ const formasRecebimento = [
   { type: FormaRecebimento.CHEQUE, label: 'Cheque' },
   { type: FormaRecebimento.NAO_IDENTIFICADA, label: 'Não identificada' },
 ];
+
+function baixarArquivo() {
+  const dataArquivo = new Date(arquivo.value.dataGeracaoArquivo).toString();
+  const nomeArquivo = `RCB001${normalizarData(dataArquivo).replaceAll('/', '')}${arquivo.value.seqRetornoIntercambio}${arquivo.value.seqArquivo}`;
+
+  const texto = arquivoTexto.value.reduce((rawTexto, line) => {
+    return (rawTexto += `${line}\n`);
+  }, '');
+  const blob = new Blob([texto as string], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${nomeArquivo}.txt`;
+  document.body.appendChild(a);
+
+  a.click();
+
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
 function cancelRegistroDetalhe(): void {
   registroDetalhe.value = { bancoCreditado: {} } as RegistroDetalhe;
@@ -434,6 +456,7 @@ async function submit(): Promise<void> {
           <VAlert v-else color="red" class="text-center" text="Erro ao gerar o texto do arquivo-retorno!" />
         </VCardText>
         <VCardActions>
+          <VBtn color="primary" variant="outlined" @click="baixarArquivo">Baixar</VBtn>
           <VBtn color="primary" @click="openDialog = false">Ok</VBtn>
         </VCardActions>
       </VCard>
