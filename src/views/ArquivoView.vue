@@ -102,9 +102,12 @@ function generateRegistros(): void {
 }
 
 function generateTrailler(): string {
-  const valorTotal: number = arquivo.value.registrosDetalhe.reduce((totalValue, { valorRecebido, valorTarifa }) => {
-    return (totalValue += valorRecebido + valorTarifa);
-  }, 0);
+  const valorTotal: number = arquivo.value.registrosDetalhe.reduce(
+    (totalValue: number, { valorRecebido, valorTarifa }) => {
+      return (totalValue += Number(valorRecebido) + Number(valorTarifa));
+    },
+    0
+  );
 
   return `Z${(arquivoTexto.value.length + 1).toString().padStart(6, '0')}${valorTotal.toString().padStart(17, '0')}                                                                                                                              `;
 }
