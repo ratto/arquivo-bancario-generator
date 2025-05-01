@@ -7,9 +7,10 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      environment: 'jsdom',
       globals: true,
+      environment: 'jsdom',
       exclude: [...configDefaults.exclude, 'e2e/*'],
+      setupFiles: './vitest.setup.ts', // Adicione um arquivo de configuração de inicialização
     },
   })
 );
