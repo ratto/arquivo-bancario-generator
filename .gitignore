@@ -24,4 +24,4 @@ coverage
 *.sln
 *.sw?
 
-.env
+.env*
