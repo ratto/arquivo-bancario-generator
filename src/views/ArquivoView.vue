@@ -163,7 +163,8 @@ async function submit(): Promise<void> {
 
 <template>
   <div id="arquivo-view">
-    <h1>Leiaute RCB001</h1>
+    <h1>Arquivos de Retorno</h1>
+    <h2>Leiaute RCB001</h2>
     <VForm novalidate ref="form-arquivo" @submit.prevent="submit" @reset="resetArquivo">
       <VRow>
         <VCol>
