@@ -9,6 +9,11 @@ export default mergeConfig(
     test: {
       globals: true,
       environment: 'jsdom',
+      server: {
+        deps: {
+          inline: ['vuetify'],
+        },
+      },
       exclude: [...configDefaults.exclude, 'e2e/*'],
       setupFiles: './vitest.setup.ts', // Adicione um arquivo de configuração de inicialização
     },
