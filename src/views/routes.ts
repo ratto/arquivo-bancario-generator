@@ -21,6 +21,7 @@ export const routes = [
   },
   {
     path: '/:catchAll(.*)',
+    name: 'erro',
     component: ErrorView,
   },
 ];
