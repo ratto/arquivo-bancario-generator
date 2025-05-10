@@ -43,6 +43,4 @@ const vuetify = createVuetify({
   directives,
 });
 
-global.ResizeObserver = require('resize-observer-polyfill');
-
 createApp(App).use(router).use(pinia).use(vuetify).use(i18n).mount('#app');
